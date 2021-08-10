@@ -11,9 +11,6 @@ const connectionDB = mysql.createConnection({
      database:'myHive'
 });
 
-let categoriesDB = {};
-let supplierDB = {};
-let productDB = {};
 
 module.exports = (app) => {
 
@@ -59,7 +56,6 @@ response.json({
     }
 })
 
-
 })//end of the get for the products
 
 //handling the get request to display the product details
@@ -94,4 +90,23 @@ app.get('/categoryproducts' , (request , response) =>{
   })
 
 })
+
+
+//get the product that is going to modify
+app.get('/modifyproduct' , (request , response)=>{
+  let id_product = request.query.id;
+
+  connectionDB.query(`select * from product where id_product = ${id_product}` , (error , result) =>{
+
+     if(error) throw error;
+     else{
+       response.json({
+         message:'request has been made successfully',
+         body: JSON.parse(JSON.stringify(result))
+       })
+     }
+
+  })
+})
+
 }//end of the app
