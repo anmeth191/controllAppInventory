@@ -20,7 +20,7 @@ app.get('/categories' , (request , response )=>{
      if(error) throw error;
      else { 
       response.json({
-        message:'your request has been completed',
+        message:'your request has been completed and good',
         body: JSON.parse(JSON.stringify(resultsDB))
        })
      }
