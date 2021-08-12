@@ -35,4 +35,31 @@ response.json({
 }//end of the else
 })//end of the query
 })//end of the app post
+
+app.post('/modifyproduct' , (request , response) =>{ 
+    let product_id = request.body.product_id;
+    let product_name = request.body.product_name;
+    let product_description = request.body.product_description;
+    let product_price = request.body.product_price;
+    let product_unit = request.body.product_unit;
+    let product_quantity = request.body.product_quantity;
+    let product_category = request.body.product_category;
+    let product_supplier = request.body.product_supplier;
+
+
+   connectionDB.query(`UPDATE product SET productName = "${product_name}",productDescription = "${product_description}",productPrice = "${product_price}",id_category = "${product_category}",id_supplier = "${product_supplier}",productLevels = " ${product_quantity}",unitProduct = "${product_unit}"  WHERE id_product =  ${product_id}` , 
+   (error,results) =>{
+                if(error) throw error;
+                 else{
+                response.json({
+                message:'Your product has been updated'
+                })//end of the response json
+              }//end of the callback function
+
+        })//end of the query
+                                        
+
+ 
+})
+
 }//end of the module
