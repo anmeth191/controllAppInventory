@@ -57,9 +57,57 @@ app.post('/modifyproduct' , (request , response) =>{
               }//end of the callback function
 
         })//end of the query
-                                        
+})//end of the post to modify the product
 
- 
-})
 
+app.post('/register' , (request , response )=>{
+
+    // destructure my information coming from the client
+let { userName } = request.body;
+let { userEmail } = request.body;
+let { userPassword } = request.body;
+
+
+//create a Promise to validate if the user exist or not into the dataBase
+let validateUserInDatabase = new Promise((resolve , reject)=>{
+
+//create the conection into the database and select the user
+connectionDB.query(`SELECT user_email FROM appUser` , (error , results) =>{
+
+    //convert the result from the datadate into an arrau and inside an pbject where it can be looped
+let usersDatabase = JSON.parse(JSON.stringify(results));
+
+//look for the user thay us coming from the client side if the user exist it is going to return true and it can not be added
+let matchUser = usersDatabase.find( user => { return user.user_email === userEmail }) 
+
+if(error) throw error;
+if(matchUser){
+    reject(true);//return true the user already exist in the database
+}else{
+    resolve(false); //returns false the user does not exist in the database
+}
+})//end ot my SQL query
+})//end of my promise 
+
+//catch the values of my promise
+validateUserInDatabase.then( validateResponse =>{ 
+
+   //if when looped into the reults the user is not found or false, it is going to be saved in the database
+    if(validateResponse === false){
+    
+        connectionDB.query(`INSERT INTO appUser (user_email , user_name , user_password ) VALUES ("${userEmail}" , "${userName}" , "${userPassword}")`);    
+    //send a message to the client that the user has been added
+    
+    response.json({message:'your user has been added'});    
+    }//catch the in case my promise rejects
+}).catch( error =>{ if(error === true){
+    
+    //if when looped the user is found then send a reject message that the user exist
+    response.json({message:'This user already exist'});
+   } 
+
+})//end of the catch
+})//end of the post to register a new user
 }//end of the module
+
+
