@@ -97,7 +97,6 @@ app.get('/modifyproduct' , (request , response)=>{
   let id_product = request.query.id;
 
   connectionDB.query(`select * from product where id_product = ${id_product}` , (error , result) =>{
-
      if(error) throw error;
      else{
        response.json({
